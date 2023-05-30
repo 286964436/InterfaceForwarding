@@ -1,6 +1,6 @@
 const Koa = require('koa');
 const cors = require('koa2-cors');
-const proxy = require('koa-proxy');
+const proxy = require('koa-http-proxy');
 const logger = require('koa-logger');
 
 const app = new Koa();
@@ -12,7 +12,7 @@ app.use(cors({
   maxAge: 5,
   credentials: true,
   allowMethods: ['GET', 'POST', 'DELETE', 'OPTIONS', 'PUT'],
-  allowHeaders: ['Content-Type', 'Authorization', 'Accept', 'Accept-Custom-Type', 'OAUTH2', 'zx-oauth2','Content-Encoding']
+  allowHeaders: ['Content-Type', 'Authorization', 'Accept', 'Accept-Custom-Type', 'Cookie','Content-Encoding','Referer']
 }));
 
 const proxyOptions = {
@@ -21,9 +21,10 @@ const proxyOptions = {
   // 其他可选配置...
 };
 
-app.use(proxy('/api', proxyOptions));
+const proxyMiddleware = proxy(proxyOptions);
+app.use(proxyMiddleware);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`服务正直运行 ${port}`);
 });
