@@ -1,19 +1,29 @@
-const koa = require('koa')
-const cors = require('koa2-cors')
-var app = new koa()
-var proxy = require('koa-proxy')
+const Koa = require('koa');
+const cors = require('koa2-cors');
+const proxy = require('koa-proxy');
+const logger = require('koa-logger');
+
+const app = new Koa();
+
+app.use(logger()); // 添加日志记录中间件
 
 app.use(cors({
-    origin: 'http://localhost:1234',
-    maxAge: 5,
-    credentials: true,
-    allowMethods: ['GET', 'POST', 'DELETE', 'OPTIONS', 'PUT'],
-    allowHeaders: ['Content-Type', 'Authorization', 'Accept', 'Accept-Custom-Type', 'OAUTH2', 'zx-oauth2','Content-Encoding']
-}))
-
-app.use(proxy({
-    host: 'http://office.zx-tech.net:8011',
+  origin: 'http://localhost:1234',
+  maxAge: 5,
+  credentials: true,
+  allowMethods: ['GET', 'POST', 'DELETE', 'OPTIONS', 'PUT'],
+  allowHeaders: ['Content-Type', 'Authorization', 'Accept', 'Accept-Custom-Type', 'OAUTH2', 'zx-oauth2','Content-Encoding']
 }));
 
+const proxyOptions = {
+  target: 'http://cdxsyl.cn/',
+  changeOrigin: true,
+  // 其他可选配置...
+};
 
-app.listen(3000)
+app.use(proxy('/api', proxyOptions));
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
