@@ -12,7 +12,7 @@ app.use(cors({
 }))
 
 app.use(proxy({
-    host: 'http://office.zx-tech.net:8011',
+    host: 'http://:8011',
 }));
 
 
