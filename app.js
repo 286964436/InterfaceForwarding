@@ -12,7 +12,7 @@ app.use(cors({
 }))
 
 app.use(proxy({
-    host: 'http://:8011',
+    host: 'http://cdxsyl.cn/',
 }));
 
 
